@@ -1,0 +1,67 @@
+seo:
+  title: Redocly Training
+  description: The best API documentation generator ever.
+  siteUrl: https://developer-portal-starter.redoc.ly
+  keywords: redocly developer portal, api portal starter, api reference docs
+  lang: en-US
+linkChecker:
+  severity: warning
+  options:
+    CheckExternal: false
+logo:
+  image: ./images/logo.png
+  altText: Redocly Training
+toc:
+  enable: true
+oasDefinitions:
+  petstore: ./openapi/petstore.yaml
+  rock: https://api.redoc.ly/registry/redocly/Demo%20Rock/1.0.0/bundle/rock-paper-scissors/openapi.yaml
+  paper: https://api.redoc.ly/registry/redocly/Demo%20Paper/1.0.0/bundle/rock-paper-scissors/openapi.yaml
+  scissors: https://api.redoc.ly/registry/redocly/Demo%20Scissors/1.0.0/bundle/rock-paper-scissors/openapi.yaml
+
+  # add links to definitions in our API registry by using a fully qualified URL.
+stylesheets:
+  - https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap
+  - https://fonts.googleapis.com/css?family=Source+Code+Pro:300,400,600,700&display=swap
+#analytics:
+  # ga:
+  # note that GA doesn't work in the development environment
+  #  trackingId: UA-45997213-1
+#scripts:
+#  - ./static/intercom.js
+nav:
+
+  - label: Training exercises
+    page: developer-portal/index.md
+
+  - label: Drilldown sidebars
+    page: drilldown/index.md
+
+  - label: Combined sidebars
+    page: combined/index.md
+
+  - label: Separated sidebars
+    page: separated/index.md
+
+  - label: API catalog
+    page: catalog/index.mdx
+
+  - search: true
+
+footer:
+  copyrightText: Copyright © Redocly 2019-2022. All right reserved.
+  columns:
+    - group: Legal
+      items:
+        - label: Terms of Use
+          href: 'https://redoc.ly/subscription-agreement/'
+        - label: Privacy Notice
+          href: 'https://redoc.ly/privacy-notice/'
+        - label: Cookie Notice
+          href: 'https://redoc.ly/cookie-notice/'
+    - group: Support
+      items:
+        - label: FAQ
+          page: faq.md
+        - label: Contact us
+          page: contact.mdx
