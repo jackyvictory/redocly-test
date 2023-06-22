@@ -1,0 +1,10 @@
+type: reference-docs
+definitionId: petstore
+# permission: 'read:public'
+
+settings:
+  generateCodeSamples:
+    languages:
+      - lang: curl
+      - lang: JavaScript
+      - lang: Node.js
