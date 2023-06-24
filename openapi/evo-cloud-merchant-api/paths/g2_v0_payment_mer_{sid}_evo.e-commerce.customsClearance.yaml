@@ -1,0 +1,390 @@
+post:
+  summary: /customerClearance
+  description: ''
+  operationId: customerclearance_post
+  parameters:
+    - name: merchantTransID
+      in: query
+      description: The merchantTransID of Payment.
+      required: true
+      schema:
+        type: string
+    - name: sid
+      in: path
+      description: EVO Cloud assigned store number, unique identifier for store.
+      schema:
+        type: string
+        default: S000001
+      required: true
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - customsClearance
+            - customsData
+          properties:
+            customsClearance:
+              type: object
+              description: The customs Clearance information.
+              properties:
+                merchantClearanceInfo:
+                  type: object
+                  description: The merchant clearance information.
+                  required:
+                    - clearanceID
+                  properties:
+                    clearanceID:
+                      type: string
+                      description: >-
+                        The merchant-generated customs declaration order number.
+                        Max for 32.
+                    isSplit:
+                      type: boolean
+                      description: >-
+                        The merchant controls whether this order is split for
+                        customs declaration. T: split order F/empty: non-split
+                        order.
+                    subClearanceID:
+                      type: string
+                      description: >-
+                        The merchant sub-order number. Mandatory when the order
+                        is splited, otherwise an error will be occured. Max for
+                        32.
+                customsClearanceAmount:
+                  type: object
+                  description: The customs clearance amount.
+                  required:
+                    - currency
+                    - value
+                  properties:
+                    currency:
+                      type: string
+                      description: >-
+                        The currency. The three-character currency code as
+                        defined in ISO-4217. For example : CNY.
+                    value:
+                      type: string
+                      description: The amount with major unit. Max for 12.
+                    transportValue:
+                      type: string
+                      description: >-
+                        Logistics costs, only RMB. WeChat open orders must be
+                        sent for customs declaration. Only used in
+                        /customsClearance.
+                    productValue:
+                      type: string
+                      description: >-
+                        Commodity cost, only supports RMB. WeChat open orders
+                        must be sent for customs declaration.Only used in
+                        /customsClearance.
+                actionType:
+                  type: string
+                  description: >-
+                    Request type ADD: New customs declaration application
+                    MODIFY: modify customs declaration application.
+            customsData:
+              type: object
+              description: The customs data.
+              required:
+                - customsID
+              properties:
+                customsID:
+                  type: string
+                  description: The Customs ID. Max for 20.
+                merchantCustomsID:
+                  type: string
+                  description: >-
+                    The merchant's record number registered in the customs. Max
+                    for 64.
+                merchantCustomsName:
+                  type: string
+                  description: >-
+                    The name of the merchant registered in the customs. The
+                    original transaction is Alipay, which must be sent at the
+                    time of customs declaration. Max for 64.
+            buyerInfo:
+              type: object
+              description: The buyer information.
+              properties:
+                name:
+                  type: string
+                  description: >-
+                    The buyer's name, which can be the name information left by
+                    the buyer at the merchant. Max for 64.
+                certificateType:
+                  type: string
+                  description: >-
+                    The type of document. Enumerated value: 'IdCard',
+                    'MilitaryId', 'Passport', 'HongKongAndMacaoPass',
+                    'TaiwanPass', 'PoliceIdCard', 'SoldiersCard' and 'Others'
+                    (Alipay currently only supports IdCard).
+                number:
+                  type: string
+                  description: The ID number. Max for 64.
+        examples:
+          Request Example:
+            value:
+              customsClearance:
+                actionType: ADD
+                merchantClearanceInfo:
+                  clearanceID: C106291624967644637
+                customsClearanceAmount:
+                  currency: CNY
+                  value: '0.35'
+              customsData:
+                customsID: NINGBO
+                merchantCustomsID: C107051625457853848
+  responses:
+    '200':
+      description: '200'
+      content:
+        application/json:
+          examples:
+            Result:
+              value: |-
+                {
+                    "buyerInfo": {
+                        "identityCheck": false
+                    },
+                    "customsClearance": {
+                        "customsClearanceAmount": {
+                            "currency": "CNY",
+                            "productValue": "0.3",
+                            "transportValue": "0.05",
+                            "value": "0.35"
+                        },
+                        "merchantClearanceInfo": {
+                            "ClearanceID": "C106291624967644637",
+                            "isSplit": true,
+                            "subClearanceID": "C10629162496764463701"
+                        },
+                        "pspClearanceInfo": {
+                            "pspClearanceID": "4200001235202106297730653419"
+                        },
+                        "status": "SUCCESS"
+                    },
+                    "customsData": {
+                        "customsID": "NINGBO",
+                        "customsReturnMessage": "0|ok"
+                    },
+                    "result": {
+                        "code": "S0000",
+                        "message": "success"
+                    }
+                }
+          schema:
+            type: object
+            properties:
+              buyerInfo:
+                type: object
+                properties:
+                  identityCheck:
+                    type: boolean
+                    example: false
+                    default: true
+              customsClearance:
+                type: object
+                properties:
+                  customsClearanceAmount:
+                    type: object
+                    properties:
+                      currency:
+                        type: string
+                        example: CNY
+                      productValue:
+                        type: string
+                        example: '0.3'
+                      transportValue:
+                        type: string
+                        example: '0.05'
+                      value:
+                        type: string
+                        example: '0.35'
+                  merchantClearanceInfo:
+                    type: object
+                    properties:
+                      ClearanceID:
+                        type: string
+                        example: C106291624967644637
+                      isSplit:
+                        type: boolean
+                        example: true
+                        default: true
+                      subClearanceID:
+                        type: string
+                        example: C10629162496764463701
+                  pspClearanceInfo:
+                    type: object
+                    properties:
+                      pspClearanceID:
+                        type: string
+                        example: '4200001235202106297730653419'
+                  status:
+                    type: string
+                    example: SUCCESS
+              customsData:
+                type: object
+                properties:
+                  customsID:
+                    type: string
+                    example: NINGBO
+                  customsReturnMessage:
+                    type: string
+                    example: 0|ok
+              result:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: S0000
+                  message:
+                    type: string
+                    example: success
+    '400':
+      description: '400'
+      content:
+        application/json:
+          examples:
+            Result:
+              value: '{}'
+          schema:
+            type: object
+            properties: {}
+  deprecated: false
+get:
+  summary: /customerClearance
+  description: ''
+  operationId: customerclearance_get
+  parameters:
+    - name: clearanceID
+      in: query
+      description: The clearanceID of customsClearance.
+      required: true
+      schema:
+        type: string
+    - name: sid
+      in: path
+      description: EVO Cloud assigned store number, unique identifier for store.
+      schema:
+        type: string
+        default: S000001
+      required: true
+  responses:
+    '200':
+      description: '200'
+      content:
+        application/json:
+          examples:
+            Result:
+              value: |-
+                {
+                    "buyerInfo": {
+                        "identityCheck": false
+                    },
+                    "customsClearance": {
+                        "customsClearanceAmount": {
+                            "currency": "CNY",
+                            "productValue": "0.3",
+                            "transportValue": "0.05",
+                            "value": "0.35"
+                        },
+                        "merchantClearanceInfo": {
+                            "ClearanceID": "C106291624967644637",
+                            "isSplit": true,
+                            "subClearanceID": "C10629162496764463701"
+                        },
+                        "pspClearanceInfo": {
+                            "pspClearanceID": "4200001235202106297730653419"
+                        },
+                        "status": "SUCCESS"
+                    },
+                    "customsData": {
+                        "customsID": "NINGBO",
+                        "customsReturnMessage": "0|ok"
+                    },
+                    "result": {
+                        "code": "S0000",
+                        "message": "success"
+                    }
+                }
+          schema:
+            type: object
+            properties:
+              buyerInfo:
+                type: object
+                properties:
+                  identityCheck:
+                    type: boolean
+                    example: false
+                    default: true
+              customsClearance:
+                type: object
+                properties:
+                  customsClearanceAmount:
+                    type: object
+                    properties:
+                      currency:
+                        type: string
+                        example: CNY
+                      productValue:
+                        type: string
+                        example: '0.3'
+                      transportValue:
+                        type: string
+                        example: '0.05'
+                      value:
+                        type: string
+                        example: '0.35'
+                  merchantClearanceInfo:
+                    type: object
+                    properties:
+                      ClearanceID:
+                        type: string
+                        example: C106291624967644637
+                      isSplit:
+                        type: boolean
+                        example: true
+                        default: true
+                      subClearanceID:
+                        type: string
+                        example: C10629162496764463701
+                  pspClearanceInfo:
+                    type: object
+                    properties:
+                      pspClearanceID:
+                        type: string
+                        example: '4200001235202106297730653419'
+                  status:
+                    type: string
+                    example: SUCCESS
+              customsData:
+                type: object
+                properties:
+                  customsID:
+                    type: string
+                    example: NINGBO
+                  customsReturnMessage:
+                    type: string
+                    example: 0|ok
+              result:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: S0000
+                  message:
+                    type: string
+                    example: success
+    '400':
+      description: '400'
+      content:
+        application/json:
+          examples:
+            Result:
+              value: '{}'
+          schema:
+            type: object
+            properties: {}
+  deprecated: false

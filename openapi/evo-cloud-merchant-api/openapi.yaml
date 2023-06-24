@@ -1,0 +1,48 @@
+openapi: 3.0.3
+info:
+  title: EVO Cloud Merchant API
+  version: '1.0'
+servers:
+  - url: https://bkk-uat-online.everonet.com
+  - url: https://hkg-uat-online.everonet.com
+  - url: https://sgp-uat-online.everonet.com
+  - url: https://tyo-uat-online.everonet.com
+components:
+  securitySchemes: {}
+security:
+  - {}
+paths:
+  /g2/v0/payment/mer/{sid}/evo.e-commerce.paymentMethod:
+    $ref: paths/g2_v0_payment_mer_{sid}_evo.e-commerce.paymentMethod.yaml
+  /}/g2/v0/payment/mer/{sid}/evo.e-commerce.paymentMethod:
+    $ref: paths/}_g2_v0_payment_mer_{sid}_evo.e-commerce.paymentMethod.yaml
+  /g2/v0/payment/mer/{sid}/evo.e-commerce.payment:
+    $ref: paths/g2_v0_payment_mer_{sid}_evo.e-commerce.payment.yaml
+  /g2/v0/payment/mer/{sid}/evo.e-commerce.cancel:
+    $ref: paths/g2_v0_payment_mer_{sid}_evo.e-commerce.cancel.yaml
+  /g2/v0/payment/mer/{sid}/evo.e-commerce.capture:
+    $ref: paths/g2_v0_payment_mer_{sid}_evo.e-commerce.capture.yaml
+  /g2/v0/payment/mer/{sid}/evo.e-commerce.refund:
+    $ref: paths/g2_v0_payment_mer_{sid}_evo.e-commerce.refund.yaml
+  /g2/v0/payment/mer/{sid}/evo.e-commerce.customsClearance:
+    $ref: paths/g2_v0_payment_mer_{sid}_evo.e-commerce.customsClearance.yaml
+x-readme:
+  headers:
+    - _id: 61134751ef81e5026d648234
+      key: Content-Type
+      value: application/json
+    - _id: 611379e1b15c83001c36b0d3
+      key: Authorization
+      value: f56eef31c8491b69ca546ce7bd5390b6b87ad012d4d84743a0aa7ce252f611c8
+    - _id: 611379e1b15c83001c36b0d2
+      key: MsgID
+      value: M202105261621994905501
+    - _id: 611379e1b15c83001c36b0d1
+      key: DateTime
+      value: 20210526100825+0800
+    - _id: 611379e1b15c83001c36b0d0
+      key: SignType
+      value: SHA256
+  explorer-enabled: true
+  proxy-enabled: true
+  samples-enabled: true

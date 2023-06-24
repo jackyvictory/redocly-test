@@ -4,12 +4,10 @@ title: F.A.Q.
 
 # Frequently asked questions
 
-## How much does it cost?
+## Q1?
 
-https://preview.redoc.ly/redocly/new-site/pricing
+A1
 
+## Q2?
 
-## Can I do ______?
-
-Please contact us.
-
+A2

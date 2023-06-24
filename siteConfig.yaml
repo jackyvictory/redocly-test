@@ -14,6 +14,7 @@ logo:
 toc:
   enable: true
 oasDefinitions:
+  evo-cloud-merchant-api: ./openapi/evo-cloud-merchant-api/openapi.yaml
   petstore: ./openapi/petstore.yaml
   # add links to definitions in our API registry by using a fully qualified URL.
 stylesheets:
@@ -27,26 +28,29 @@ stylesheets:
 #  - ./static/intercom.js
 nav:
 
-  - label: Training exercises
+  - label: Developer Guide
     page: developer-portal/index.md
 
-  - label: External docs
-    icon: ./images/redocly-icon-white.png
-    href: https://redoc.ly/docs/developer-portal/introduction/
+  - label: API Explorer
+    page: ./openapi/evo-cloud-merchant-api/reference.page.yaml
+
+  - label: CardInfoLink
+    icon: ./images/cil_logo.png
+    href: https://www.cardinfolink.com/
 
   - search: true
 
 footer:
-  copyrightText: Copyright © Redocly 2019-2021. All right reserved.
+  copyrightText: Copyright © CardInfoLink 2010-2023. All right reserved.
   columns:
     - group: Legal
       items:
         - label: Terms of Use
-          href: 'https://redoc.ly/subscription-agreement/'
+          href: 'https://www.cardinfolink.com/'
         - label: Privacy Notice
-          href: 'https://redoc.ly/privacy-notice/'
+          href: 'https://www.cardinfolink.com/'
         - label: Cookie Notice
-          href: 'https://redoc.ly/cookie-notice/'
+          href: 'https://www.cardinfolink.com/'
     - group: Support
       items:
         - label: FAQ

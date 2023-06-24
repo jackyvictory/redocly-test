@@ -1,0 +1,24 @@
+organization: CIL
+
+extends:
+  - recommended
+
+apis:
+  EVO Test@v1:
+    root: ./api.json
+    labels:
+      - external
+    rules:
+      no-ambiguous-paths: error
+    theme:
+      openapi:
+        hideLogo: true
+
+theme:
+  openapi:
+    schemaExpansionLevel: 2
+    generateCodeSamples:
+      languages:
+        - lang: curl
+        - lang: Python
+        - lang: Go

@@ -1,21 +1,18 @@
 ---
-title: Training program
+title: About
 ---
 
-# Training program
+# About 
+## About CardInfoLink
 
-This interactive training program is designed to help you understand how to create and edit content using Redocly's developer portal.
-It's a great companion to our [developer portal docs](https://docs.redoc.ly/developer-portal/introduction/).
+CardInfoLink Hong Kong Corporation Limited ("CIL") is a financial technology company incorporated in Hong Kong, China. CIL has provided payment systems and solutions for payment players including issuers and acquirers to fulfill their requirements of payment transaction processing and related service.
 
-Spend between an hour and a day playing with the most commonly utilized features.
+As an experienced third-party payment service provider, CIL has obtained full certifications from payment industry, Card Schemes, and wallet operators, including PCI DSS, ISO27001, VISA, Mastercard, AMEX, JCB, Diners/Discover, UnionPay, Alipay, WeChat Pay, etc.
 
-## Prerequisites
-- Basic Git and markdown knowledge
-- Node and yarn installed
-- A text editor or IDE (we like VS Code)
-- [Setup the developer portal](setup.md)
+## About EVO Cloud
+EVO Cloud is an integrated acquiring host and payment gateway with full functions to support both card and wallet transactions, and both online and offline transaction, with related functions and services of transaction processing, clearing and reconciliation, merchant onboarding, risk control and management, currency conversion, customer report service, etc.
 
-## Training exercises
+<!-- ## Training exercises
 
 Follow the training exercises sequentially.
 Or cherry-pick them independently if you're limited on time.
@@ -42,4 +39,4 @@ Learn how to [deploy the developer portal](https://docs.redoc.ly/ci-cd-workflows
 
 ## Asking for help
 
-Don't be shy... we're here to help.
+Don't be shy... we're here to help. -->

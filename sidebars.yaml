@@ -1,7 +1,38 @@
 training:
   - page: developer-portal/index.md
+
+  - group: Getting start
+    expanded: false
+    pages:
+      - label: Before you begin
+        page: developer-portal/getting-start/before-you-begin.md
+      - label: Start integrating
+        page: developer-portal/getting-start/start-integrating.md
+      - label: Test and go live
+        page: developer-portal/getting-start/test-and-go-live.md
+
+  - group: Payment
+    expanded: false
+    pages:
+      - label: Overview
+        page: developer-portal/payment/overview.md
+      - label: E-commerce-payment
+        page: developer-portal/payment/e-commerce-payment.md
+      - label: In-store-CPM-payment
+        page: developer-portal/payment/in-store-cpm-payment.md
+      - label: In-store-dynamic-MPM-payment
+        page: developer-portal/payment/in-store-dynamic-mpm-payment.md
+      - label: In-store-static-MPM-payment
+        page: developer-portal/payment/in-store-static-mpm-payment.md
+
+  - group: API Explorer
+    expanded: false
+    pages:
+      - page: openapi/evo-cloud-merchant-api/reference.page.yaml/*
+
+
   - group: Training exercises
-    expanded: true
+    expanded: false
     pages:
       - label: Setup
         page: developer-portal/setup.md
@@ -38,13 +69,14 @@ training:
         page: developer-portal/mdx.mdx
       - label: Creating React components
         page: developer-portal/custom-component.mdx
+
   - group: Petstore reference
     expanded: false
     pages:
       - page: openapi/reference.page.yaml/*
 
   - group: Admin
-    expanded: true
+    expanded: false
     pages:
       - group: Routine
         expanded: true

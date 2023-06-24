@@ -1,0 +1,1043 @@
+post:
+  summary: /paymentMethod
+  description: Call this API to create a token.
+  operationId: paymentmethod_post
+  parameters:
+    - name: sid
+      in: path
+      description: EVO Cloud assigned store number, unique identifier for store.
+      schema:
+        type: string
+        default: S000001
+      required: true
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - merchantTransInfo
+            - paymentMethod
+          properties:
+            authentication:
+              type: object
+              description: The cardholder authentication information.
+              properties:
+                action:
+                  type: string
+                  description: >-
+                    The purpose of the current PUT payment method request. An
+                    enumerated value. [ResendSMS]: Mandatory when the front end
+                    needs to resend SecurePlus SMS. Max for 50.
+                mobilePhone:
+                  type: string
+                  description: >-
+                    The cardholder mobile number, used for SecurePlus
+                    authentication. Max for 16.
+                returnUrl:
+                  type: string
+                  description: >-
+                    The callback address after authentication has completed.
+                    Mandatory under 3DS authentication and LSS authentication
+                    scenarios. Max for 300.
+                lss:
+                  type: object
+                  description: >-
+                    The LSS authentication information. The authentication
+                    result parameters can be submitted directly during payment
+                    if you already have.
+                  properties:
+                    lssData:
+                      type: object
+                      description: The LSS authentication data.
+                      required:
+                        - eci
+                      properties:
+                        eci:
+                          type: string
+                          description: The electronic commerce indicator. Max for 2.
+                        xid:
+                          type: string
+                          description: Mandatory when eci = 83. Max for 32.
+                        lsav:
+                          type: string
+                          description: Mandatory when eci = 83. Max for 32.
+                    encryptedAuthResponse:
+                      type: string
+                      description: >-
+                        The encrypted authentication message back to the
+                        merchant back URL by LSS DS. Max for 2048.
+                securePlus:
+                  type: object
+                  description: >-
+                    The secureplus authentication information. The
+                    authentication result parameters can be submitted directly
+                    during payment when you already have.
+                  properties:
+                    securePlusData:
+                      type: object
+                      description: >-
+                        The secureplus authentication data. The authentication
+                        result parameters can be submitted directly during
+                        payment when you already have.
+                      required:
+                        - authenticationResultCode
+                        - vcode
+                      properties:
+                        authenticationResultCode:
+                          type: string
+                          description: >-
+                            The raw result of the authentication check. Max for
+                            2.
+                        vcode:
+                          type: string
+                          description: >-
+                            The verification code received from UPOP. Max for
+                            2048.
+                    smsCode:
+                      type: string
+                      description: >-
+                        Mandatory when POST payment is answered with result.code
+                        = S0004 and action = VerifySMSCode. Max for 6.
+                threeDS:
+                  type: object
+                  description: Mandatory when the desired authentication method is 3DS.
+                  required:
+                    - deviceType
+                  properties:
+                    authenticationType:
+                      type: string
+                      description: >-
+                        Expected 3DS authentication mode, below values are
+                        acceptable. "threeDSPage": 3DS authentication with
+                        single page jump; "threeDSIntegrator": API integrated
+                        3DS certification. If you don’t send it, the default is
+                        "threeDSPage"
+                    deviceType:
+                      type: string
+                      description: '''Web'' ''iOS'' ''Android'''
+                    shopperIP:
+                      type: string
+                      description: The shopper's IP address. Max for 64.
+                    shopperEmail:
+                      type: string
+                      description: The shopper‘s email address. Max for 254.
+                    origin:
+                      type: string
+                      description: >-
+                        The URL of the page where you are loading the 3D Secure
+                        2 Component from. The origin should not include
+                        subdirectories and a trailing slash. You can also get
+                        this by opening the browser console and calling
+                        window.location.origin. Mandatory if deviceType = Web.
+                    mpiData:
+                      type: object
+                      description: >-
+                        The 3DS authentication information. The authentication
+                        result parameters can be submitted directly during
+                        payment when you already have.
+                      required:
+                        - cavv
+                        - eci
+                      properties:
+                        cavv:
+                          type: string
+                          description: The cavv. Max for 28.
+                        cavvAlgorithm:
+                          type: string
+                          description: Mandatory for 3D Secure 1. Max for 1.
+                        eci:
+                          type: string
+                          description: The electronic commerce indicator. Max for 2.
+                        xid:
+                          type: string
+                          description: >-
+                            Mandatory for 3D Secure 1. The transaction
+                            identifier in a decoded form assigned by the
+                            directory server. Max for 20.
+                        dsTransID:
+                          type: string
+                          description: Mandatory for 3D Secure 2. Max for 36.
+                        threeDSVersion:
+                          type: string
+                          description: >-
+                            Mandatory for 3D Secure 2. The current version
+                            supported is 2.1.0. Max for 10.
+                    redirectData:
+                      type: object
+                      properties:
+                        pAres:
+                          type: string
+                          description: >-
+                            The pares data. The issuer bank's authentication
+                            page will return this value when the shopper
+                            finished the ChallengeShoper process. Mandatory when
+                            threeDSFinished=Y in the request message and get
+                            response with code = S0005, action = RedirectShopper
+                            in POST payment method. Max for 300.
+                        threeDSComplnd:
+                          type: string
+                          description: >-
+                            'Y' or 'N'. Mandatory when POST payment is answered
+                            with code = S0005 and action = IdentifyShopper.
+                        threeDSFinished:
+                          type: string
+                          description: >-
+                            'Y' or 'N'. Mandatory when POST payment is answered
+                            with result.code = S0005 and action =
+                            RedirectShopper or ChallengeShopper.
+                browserInfo:
+                  type: object
+                  description: >-
+                    The user browser information for 3DS authentication, which
+                    will be passed to HiTRUST.
+                  required:
+                    - acceptHeader
+                    - colorDepth
+                    - javaEnabled
+                    - language
+                    - screenHeight
+                    - screenWidth
+                    - timeZoneOffset
+                    - userAgent
+                  properties:
+                    acceptHeader:
+                      type: string
+                      description: >-
+                        The accept header value of consumer browser. Max for
+                        2048.
+                    colorDepth:
+                      type: string
+                      description: >-
+                        The color depth of the shopper's browser, in pixels. Use
+                        the screen .colorDepth property of the browser to get
+                        the value. Accepted value: 1,4,8,15,16,24,32 or 48 bits.
+                        Max for 2.
+                    javaEnabled:
+                      type: boolean
+                      description: >-
+                        A boolean value indicating whether the shopper's browser
+                        is able to execute Java.
+                    javaScriptEnabled:
+                      type: boolean
+                      description: >-
+                        A boolean value indicating whether the shopper's browser
+                        is able to execute JavaScript. A default 'true' value is
+                        assumed if the field is not present.
+                    language:
+                      type: string
+                      description: >-
+                        The value that represents the browser language defined
+                        in IETF BCP47, returned from the navigator.language
+                        property. Examples: NL , FR , US. Max for 8.
+                    screenHeight:
+                      type: string
+                      description: >-
+                        The total height of the cardholder's screen in pixels.
+                        The value is returned from the screen.height property.
+                        Max for 6.
+                    screenWidth:
+                      type: string
+                      description: >-
+                        The total width of the cardholder's screen in pixels.
+                        The value is returned from the screen.width property.
+                        Max for 6.
+                    timeZoneOffset:
+                      type: string
+                      description: >-
+                        The time difference between the UTC time and the local
+                        time of the cardholder's browser, in minutes. The value
+                        is got from the getTimezoneOffset () method. For
+                        example: "-120". Max for 5.
+                    userAgent:
+                      type: string
+                      description: >-
+                        The user agent value of the shopper's browser. Max for
+                        2048.
+                accountInfo:
+                  type: object
+                  description: >-
+                    The shopper account information for 3D Secure 2, which will
+                    be passed to HiTRUST.
+                  required:
+                    - country
+                    - houseNumberOrName
+                    - postalCode
+                    - stateOrProvince
+                  properties:
+                    accountAgeIndicator:
+                      type: string
+                      description: >-
+                        The indicator for the length of time since this shopper
+                        account has been created. Allowed values:
+                        'notApplicable', 'thisTransaction', 'lessThan30Days',
+                        'from30To60Days' and 'moreThan60Days'.
+                    accountChangeDate:
+                      type: string
+                      description: >-
+                        The datetime when the shopper's account was last
+                        changed. Format: ISO 8601 YYYY-MM-DDThh:mm:ssTZD Sample:
+                        2017-07-17T13:42:40+01:00
+                      format: date
+                    accountChangeIndicator:
+                      type: string
+                      description: >-
+                        The indicator when the shopper's account was last
+                        changed. Allowed values: 'thisTransaction',
+                        'lessThan30Days', 'from30To60Days' and 'moreThan60Days'.
+                    accountCreationDate:
+                      type: string
+                      description: >-
+                        The datetime when the shopper's account was created.
+                        Format: ISO 8601 YYYY-MM-DDThh:mm:ssTZD Sample:
+                        2017-07-17T13:42:40+01:00
+                      format: date
+                    passwordChangeDate:
+                      type: string
+                      description: >-
+                        The datetime when the shopper's password was last
+                        changed. Format: ISO 8601 YYYY-MM-DDThh:mm:ssTZD Sample:
+                        2017-07-17T13:42:40+01:00
+                      format: date
+                    passwordChangeDateIndicator:
+                      type: string
+                      description: >-
+                        The indicator when the shopper's password was last
+                        changed. Allowed values: 'thisTransaction',
+                        'lessThan30Days', 'from30To60Days' and 'moreThan60Days'.
+                    purchasesLast6Months:
+                      type: string
+                      description: >-
+                        The number of order purchased in the last 6 months. Max
+                        for 12.
+                    addCardAttemptsDay:
+                      type: string
+                      description: >-
+                        The number of attempts the shopper has tried to add a
+                        card to the account in the last day. Max for 12.
+                    pastTransactionsDay:
+                      type: string
+                      description: >-
+                        The number of transactions from this shopper in the past
+                        24 hours. Max for 12.
+                    pastTransactionsYear:
+                      type: string
+                      description: >-
+                        The number of transactions from this shopper in the past
+                        year. Max for 12.
+                    paymentAccountAge:
+                      type: string
+                      description: >-
+                        The datetime the payment method was added to the
+                        shopper's account. Format: ISO 8601
+                        YYYY-MM-DDThh:mm:ssTZD Sample: 2017-07-17T13:42:40+01:00
+                      format: date
+                    paymentAccountIndicator:
+                      type: string
+                      description: >-
+                        The indicator for the length of time since this payment
+                        method has been added to the shopper's account. Allowed
+                        values: 'notApplicable', 'thisTransaction',
+                        'lessThan30Days', 'from30To60Days' and 'moreThan60Days'.
+                    deliveryAddressUsageDate:
+                      type: string
+                      description: >-
+                        The datetime the selected delivery address was last
+                        used. Format: ISO 8601 YYYY-MM-DDThh:mm:ssTZD Sample:
+                        2017-07-17T13:42:40+01:00
+                      format: date
+                    deliveryAddressUsageIndicator:
+                      type: string
+                      description: >-
+                        The indicator when this delivery address was last used.
+                        Allowed values: 'thisTransaction', 'lessThan30Days',
+                        'from30To60Days' and 'moreThan60Days'.
+                    suspiciousActivity:
+                      type: boolean
+                      description: >-
+                        Whether any suspicious activity has been recorded on
+                        this account.
+                    homePhone:
+                      type: string
+                      description: >-
+                        The shopper's home phone number (including the country
+                        code). Max for 16.
+                    mobilePhone:
+                      type: string
+                      description: >-
+                        The shopper's mobile phone number (including the country
+                        code). Max for 16.
+                    workPhone:
+                      type: string
+                      description: >-
+                        The shopper's work phone number (including the country
+                        code). Max for 16.
+                    city:
+                      type: string
+                      description: >-
+                        The name of the city. Only alphabetic and numeric
+                        characters are allowed. Max for 50.
+                    country:
+                      type: string
+                      description: >-
+                        The three-character country code as defined in
+                        ISO-3166-1 alpha-3. For example, CHN.
+                    houseNumberOrName:
+                      type: string
+                      description: >-
+                        The number or name of the house. Only alphabetic and
+                        numeric characters are allowed. Max for 50.
+                    postalCode:
+                      type: string
+                      description: >-
+                        The postal code of the address. Only alphabetic and
+                        numeric characters are allowed. Max for 16.
+                    stateOrProvince:
+                      type: string
+                      description: >-
+                        The state or province codes as defined in ISO 3166-2.
+                        Mandatory for the US and Canada. Only alphabetic and
+                        numeric characters are allowed. Max for 3.
+                    street:
+                      type: string
+                      description: >-
+                        The name of the street. Only alphabetic and numeric
+                        characters are allowed. Max for 50.
+                deliveryAddress:
+                  type: object
+                  description: >-
+                    The delivery address. Mandatory if HiTRUST is used as the
+                    authentication way.
+                  required:
+                    - houseNumberOrName
+                    - street
+                    - city
+                    - country
+                    - postalCode
+                  properties:
+                    houseNumberOrName:
+                      type: string
+                      description: >-
+                        The number or name of the house. Only alphabetic and
+                        numeric characters are allowed. Max for 50.
+                    street:
+                      type: string
+                      description: >-
+                        The name of the street. Only alphabetic and numeric
+                        characters are allowed. Max for 50.
+                    city:
+                      type: string
+                      description: >-
+                        The name of the city. Only alphabetic and numeric
+                        characters are allowed. Max for 50.
+                    stateOrProvince:
+                      type: string
+                      description: >-
+                        The state or province codes as defined in ISO 3166-2.
+                        Mandatory for the US and Canada. Only alphabetic and
+                        numeric characters are allowed. Max for 3.
+                    country:
+                      type: string
+                      description: >-
+                        The three-character country code as defined in
+                        ISO-3166-1 alpha-3. For example, CHN.
+                    postalCode:
+                      type: string
+                      description: >-
+                        The postal code of the address. Only alphabetic and
+                        numeric characters are allowed. Max for 16.
+                merchantRiskIndicator:
+                  type: object
+                  description: >-
+                    The additional risk fields for 3D Secure 2. The name of the
+                    street will be passed to HiTRUST. Include this in your
+                    request whenever available.
+                  properties:
+                    addressMatch:
+                      type: boolean
+                      description: >-
+                        Whether the chosen delivery address is identical to the
+                        billing address.
+                    deliveryEmail:
+                      type: string
+                      description: >-
+                        The delivery email address (for digital goods). Max for
+                        256.
+                    deliveryTimeframe:
+                      type: string
+                      description: >-
+                        The estimated delivery time for the shopper to receive
+                        the goods. Allowed values: 'electronicDelivery',
+                        'sameDayShipping', 'overnightShipping' and
+                        'twoOrMoreDaysShipping'.
+                    giftCardAmount:
+                      type: string
+                      description: >-
+                        The amount purchased with a prepaid or gift card. Max
+                        for 12.
+                    giftCardCount:
+                      type: string
+                      description: >-
+                        The number of individual prepaid or gift cards used for
+                        this purchase. Max for 12.
+                    preOrderDate:
+                      type: string
+                      description: >-
+                        For pre-order purchases, the expected date this product
+                        will be available to the shopper. Format: ISO 8601
+                        YYYY-MM-DDThh:mm:ssTZD Sample: 2017-07-17T13:42:40+01:00
+                      format: date
+                    preOrderPurchase:
+                      type: boolean
+                      description: Whether this transaction is for pre-ordering a product.
+                    reorderItems:
+                      type: boolean
+                      description: >-
+                        Whether the shopper has already purchased the same items
+                        in the past.
+                    deliveryAddressIndicator:
+                      type: string
+                      description: >-
+                        The indicator regarding to the delivery address. Allowed
+                        values: 'shipToBillingAddress', 'shipToVerifiedAddress',
+                        'shipToNewAddress', 'shipToStore', 'digitalGoods',
+                        'goodsNotShipped' and 'other'.
+                billingAddress:
+                  type: object
+                  description: The billing address, which will be passed to HiTRUST.
+                  required:
+                    - houseNumberOrName
+                    - street
+                    - city
+                    - country
+                    - postalCode
+                  properties:
+                    houseNumberOrName:
+                      type: string
+                      description: >-
+                        The number or name of the house. Only alphabetic and
+                        numeric characters are allowed. Max for 50.
+                    street:
+                      type: string
+                      description: >-
+                        The name of the street. Only alphabetic and numeric
+                        characters are allowed. Max for 50.
+                    city:
+                      type: string
+                      description: >-
+                        The name of the city. Only alphabetic and numeric
+                        characters are allowed. Max for 50.
+                    stateOrProvince:
+                      type: string
+                      description: >-
+                        The state or province codes as defined in ISO 3166-2.
+                        Mandatory for the US and Canada. Only alphabetic and
+                        numeric characters are allowed. Max for 3.
+                    country:
+                      type: string
+                      description: >-
+                        The three-character country code as defined in
+                        ISO-3166-1 alpha-3. For example, CHN.
+                    postalCode:
+                      type: string
+                      description: >-
+                        The postal code of the address. Only alphabetic and
+                        numeric characters are allowed. Max for 16.
+            merchantTransInfo:
+              type: object
+              description: The order information.
+              required:
+                - merchantTransID
+                - merchantTransTime
+              properties:
+                merchantTransID:
+                  type: string
+                  description: >-
+                    The Merchant Order Number. Should be unique in a store. Max
+                    for 32.
+                merchantOrderReference:
+                  type: string
+                  description: >-
+                    The Merchant Order Reference Number. No need to verify
+                    uniqueness. Max for 32.
+                merchantTransTime:
+                  type: string
+                  description: >-
+                    Format: ISO 8601 YYYY-MM-DDThh:mm:ssTZD Sample:
+                    2017-07-17T13:42:40+01:00.
+                  format: date
+            storeInfo:
+              type: object
+              description: >-
+                When a store supports multiple MCCs, specify the MCC used for
+                the order.
+              properties:
+                MCC:
+                  type: string
+                  description: The Merchant Category Code. Max for 4.
+            paymentMethod:
+              type: object
+              description: The payment method information.
+              properties:
+                tokenValidDays:
+                  type: string
+                  description: >-
+                    The validity of token. Support self-defined token validity
+                    period under:0-365, 0 or permanent valid if empty. Max for
+                    3.
+                payerReference:
+                  type: string
+                  description: >-
+                    The Customer ID. Get from the front-end, without strict
+                    verification. Max for 64.
+                vaultID:
+                  type: string
+                  description: >-
+                    The group of the token belonging to. The back-end
+                    configuration is under the organization, and the token is
+                    unique under the vault. Max for 36.
+                type:
+                  type: string
+                  description: >-
+                    The payment method type. Enumerated value: 'card',
+                    'e-wallet', 'token'.
+                paymentBrand:
+                  type: string
+                  description: >-
+                    The payment brand. Enumerated value. Alipay: Alipay CN
+                    WeChat_Pay: WeChat Pay. Mandatory when
+                    paymentMethod=e-wallet
+                planID:
+                  type: string
+                  description: >-
+                    The auto debit template id. Mandatory when
+                    paymentBrand=WeChat_Pay
+                subOpenID:
+                  type: string
+                  description: WeChat pay use ID. Mandatory when paymentBrand=WeChat_Pay
+                authCode:
+                  type: string
+                  description: >-
+                    The authorization code used when signing a deduction. Max
+                    for 64.
+                card:
+                  type: object
+                  description: >-
+                    If Type = 'card', the field is needed to be sent, which
+                    means that the paymentMethod to be bound is the card. For
+                    PUT /paymentMethod, Usage 1: If you want to update the card
+                    information corresponding to the token, you need to send
+                    this field Usage 2: Send the security code when used for
+                    UnionPay credit card Secureplus enrollment. At this time,
+                    the encryptedCardInfo field only needs to be sent to cvc.
+                  properties:
+                    encryptedCardInfo:
+                      type: string
+                      description: >-
+                        The encrypted card information. It is needed to be
+                        spliced into JSON character string with card number,
+                        validity period and security code before encryption, and
+                        then the character string is encrypted as a whole. Step
+                        1: The spliced json character string:
+                        ["cardNumber":"1234123412341234", " expiryDate": "0724",
+                        "cvc":"123", "holderName":"Bob"]. Step 2: Encrypt the
+                        character string using the RSA public key of the
+                        organization/store level. Step 3: Put the cipher text
+                        into this field When ">> cardInfo object" and ">>
+                        encryptedCardInfo object" coexist, the ">> cardInfo
+                        object" shall be used. Max for 2048.
+                    cardInfo:
+                      type: object
+                      description: >-
+                        Usage 1: The card information structure for transmitting
+                        unencrypted text card information. When ">> cardInfo
+                        object" and ">> encryptedCardInfo object" coexist, the
+                        ">> cardInfo object" shall be used. Usage 2: (For PUT
+                        /paymentMethod) Usage 2: Send the security code when
+                        used for UnionPay credit card Secureplus enrollment. At
+                        this time, the encryptedCardInfo field only needs to be
+                        sent to cvc.
+                      required:
+                        - cardNumber
+                      properties:
+                        cardNumber:
+                          type: string
+                          description: The card number. Max for 19.
+                        expiryDate:
+                          type: string
+                          description: >-
+                            The validity YYMM. No need to send if UPI debit card
+                            transactions. Max for 4.
+                        cvc:
+                          type: string
+                          description: The security code. Max for 4.
+                        holderName:
+                          type: string
+                          description: The cardholder's name. Max for 50.
+                    tokenize:
+                      type: boolean
+                      description: >-
+                        Whether to generate token. If the value is true, use the
+                        card information and generate the token.
+                    tokenValidDays:
+                      type: string
+                      description: >-
+                        The validity of token. Support self-defined token
+                        validity period under:0-365, 0 or permanent valid if
+                        empty. Max for 3.
+                    payerReference:
+                      type: string
+                      description: >-
+                        The Customer ID. Get from the front-end, without strict
+                        verification. Max for 64.
+                    vaultID:
+                      type: string
+                      description: >-
+                        The group of the token belonging to. The back-end
+                        configuration is under the organization, and the token
+                        is unique under the vault. Max for 36.
+                token:
+                  type: object
+                  description: >-
+                    If Type = 'token', the field is needed to be sent, which
+                    means that the paymentMethod to be bound is the token.
+                  required:
+                    - value
+                  properties:
+                    value:
+                      type: string
+                      description: The token value. Max for 64.
+                    vaultID:
+                      type: string
+                      description: The vaultID of the token group. Max for 36.
+                e-wallet:
+                  type: object
+                  description: >-
+                    If Type = 'e-wallet', the field is needed to be sent, which
+                    means that the paymentMethod to be bound is the e-wallet.
+                  required:
+                    - paymentBrand
+                  properties:
+                    paymentBrand:
+                      type: string
+                      description: >-
+                        The payment brand. Enumerated value. Alipay: Alipay CN
+                        AlipayHK: AlipayHK WeChat_Pay: WeChat Pay TrueMoney:
+                        TrueMoney TNG: Touch 'n Go GCash: GCash DANA: DANA
+                        bKash: bKash Kakao_Pay: Kakao Pay Easypaisa: Easypaisa
+                    subOpenID:
+                      type: string
+                      description: >-
+                        Mandatory when the e-wallet.paymentBrand = WeChat_Pay,
+                        and platform=INWALLET or MINI. Max for 64.
+                    subAppID:
+                      type: string
+                      description: >-
+                        Mandatory when the e-wallet.paymentBrand = WeChat_Pay,
+                        and platform=INWALLET, MINI or APP. Max for 64.
+            transInitiator:
+              type: object
+              description: >-
+                Request origination platform. Mandatory when
+                paymentMethod.type=e-wallet
+              required:
+                - platform
+              properties:
+                platform:
+                  type: string
+                  description: >-
+                    WEB: PC browser; WAP: Mobile phone browser; APP: Mobile APP;
+                    MINI: Mini Program; INWALLET: In-wallet browser
+                spec:
+                  type: string
+                  description: The browser version. Max for 30.
+                appVersion:
+                  type: string
+                  description: The APP version. Max for 20.
+                deviceType:
+                  type: string
+                  description: 'The terminal type: ''Android'' or ''iOS''.'
+                userCreateIp:
+                  type: string
+                  description: >-
+                    The IP address of the terminal where the user initiates the
+                    transaction Mandatory when paymentBrand = WeChat Pay and
+                    platform = WAP. Max for 64.
+                osVersion:
+                  type: string
+                  description: Operating system version. Max for 20.
+            webhook:
+              type: string
+              description: >-
+                The asynchronous notification address. After the transaction is
+                successfully processed in the backend, a notification will be
+                pushed to this address. Max for 300.
+            metadata:
+              type: string
+              description: The remark information. Max for 512.
+            returnUrl:
+              type: string
+              description: >-
+                Callback address after successful auto debit signing. Mandatory
+                when paymentBrand=Alipay
+        examples:
+          Card 3DS Page:
+            value:
+              merchantTransInfo:
+                merchantTransID: T108121628768430783
+                merchantTransTime: '2021-08-12T19:40:30+08:00'
+              paymentMethod:
+                payerReference: Your identification
+                vaultID: '20210804'
+                type: card
+                card:
+                  cardInfo:
+                    cardNumber: '6011000000001093'
+                    expiryDate: '2407'
+                    cvc: 86
+                  tokenize: true
+              transInitiator:
+                platform: WEB
+              returnUrl: http://www.cardinfolink.com
+              webhook: https://64012512-b819-46d5-80ee-bebd40cc3806.mock.pstmn.io
+  responses:
+    '200':
+      description: '200'
+      content:
+        application/json:
+          examples:
+            Result:
+              value: |-
+                {
+                    "authentication": {
+                        "authenticationType": "CYBS",
+                        "threeDS": {
+                            "redirectUrl": "https://counter-test.everonet.com/3ds?YWNjZXNzVG9rZW49YTBlYTMyY2RlZjk0NDNhMmQ4NDFlMzhjODAyZDJmMDAmaW5zQ29kZT0xMDEzMDAxMCZvcmRlck51bT1UMTA4MTIxNjI4NzY4NDMwNzgzJnN0b3JlTnVtPVMwNTk3NTgmQ0NBPWg2NmVHbHkrRS9yZzgxLzFsdFQ2d1RWTnMzdzhDZUJ3M1ZKK3A0L1VmQm9zQkh0SGhmalRrU2M4N0JGSCtrVXo0Ri84dG96YmlCTDhmb2k2WDVvNlA5RW4yZlRUdzV2VmtkMWd6d3gvRVBXTUt5N29vT2tXQ2RMZHBXWUNleDhwdkNYSVpKcDNTelpJZnNrSk9kSjBDN3hGVytZZGU0bWlKejZlbkh0K1RFWHR6bERod2k0aDUzd2JibWJtT3d5SXdhcTV1ODZrRzU0T1AxNENIUVIveUZNK3dMb3RNcGYzb0xpaDQ5L3FVV1ZBMlIxMVBNK2F1VFE5Z21jVCtoK2dJVWI1azB6b04vWFkveWZZaVN2dm5KRS9PcDBlcVd1QVhtalMwZ2lOcFdXTGFzMlBJZnIxU1d4cURDK3E1NW51T3cxeGVxdW43OEVTRCt3ZjVqRHNpUT09JnJldHVyblVybD1hSFIwY0RvdkwzZDNkeTVqWVhKa2FXNW1iMnhwYm1zdVkyOXQ="
+                        }
+                    },
+                    "result": {
+                        "action": "RedirectShopper",
+                        "code": "S0005",
+                        "message": "3DS authentication required"
+                    }
+                }
+          schema:
+            type: object
+            properties:
+              authentication:
+                type: object
+                properties:
+                  authenticationType:
+                    type: string
+                    example: CYBS
+                  threeDS:
+                    type: object
+                    properties:
+                      redirectUrl:
+                        type: string
+                        example: >-
+                          https://counter-test.everonet.com/3ds?YWNjZXNzVG9rZW49YTBlYTMyY2RlZjk0NDNhMmQ4NDFlMzhjODAyZDJmMDAmaW5zQ29kZT0xMDEzMDAxMCZvcmRlck51bT1UMTA4MTIxNjI4NzY4NDMwNzgzJnN0b3JlTnVtPVMwNTk3NTgmQ0NBPWg2NmVHbHkrRS9yZzgxLzFsdFQ2d1RWTnMzdzhDZUJ3M1ZKK3A0L1VmQm9zQkh0SGhmalRrU2M4N0JGSCtrVXo0Ri84dG96YmlCTDhmb2k2WDVvNlA5RW4yZlRUdzV2VmtkMWd6d3gvRVBXTUt5N29vT2tXQ2RMZHBXWUNleDhwdkNYSVpKcDNTelpJZnNrSk9kSjBDN3hGVytZZGU0bWlKejZlbkh0K1RFWHR6bERod2k0aDUzd2JibWJtT3d5SXdhcTV1ODZrRzU0T1AxNENIUVIveUZNK3dMb3RNcGYzb0xpaDQ5L3FVV1ZBMlIxMVBNK2F1VFE5Z21jVCtoK2dJVWI1azB6b04vWFkveWZZaVN2dm5KRS9PcDBlcVd1QVhtalMwZ2lOcFdXTGFzMlBJZnIxU1d4cURDK3E1NW51T3cxeGVxdW43OEVTRCt3ZjVqRHNpUT09JnJldHVyblVybD1hSFIwY0RvdkwzZDNkeTVqWVhKa2FXNW1iMnhwYm1zdVkyOXQ=
+              result:
+                type: object
+                properties:
+                  action:
+                    type: string
+                    example: RedirectShopper
+                  code:
+                    type: string
+                    example: S0005
+                  message:
+                    type: string
+                    example: 3DS authentication required
+    '400':
+      description: '400'
+      content:
+        text/plain:
+          examples:
+            Result:
+              value: ''
+  deprecated: false
+get:
+  summary: /paymentMethod
+  description: Call this API to query ​a token.
+  operationId: paymentmethod_get
+  parameters:
+    - name: merchantTransID
+      in: query
+      description: >-
+        The merchantTransID of paymentMethod. Request URL to query token
+        authentication&generation.
+      schema:
+        type: string
+    - name: token
+      in: query
+      description: The tokenValue of paymentMethod. Request URL to query token information.
+      schema:
+        type: string
+    - name: sid
+      in: path
+      description: EVO Cloud assigned store number, unique identifier for store.
+      schema:
+        type: string
+        default: S000001
+      required: true
+  responses:
+    '200':
+      description: '200'
+      content:
+        application/json:
+          examples:
+            Result:
+              value: |-
+                {
+                    "authentication": {
+                        "authenticationType": "CYBS"
+                    },
+                    "result": {
+                        "action": "RedirectShopper",
+                        "code": "S0005",
+                        "message": "3DS authentication required"
+                    }
+                }
+          schema:
+            type: object
+            properties:
+              authentication:
+                type: object
+                properties:
+                  authenticationType:
+                    type: string
+                    example: CYBS
+              result:
+                type: object
+                properties:
+                  action:
+                    type: string
+                    example: RedirectShopper
+                  code:
+                    type: string
+                    example: S0005
+                  message:
+                    type: string
+                    example: 3DS authentication required
+    '400':
+      description: '400'
+      content:
+        application/json:
+          examples:
+            Result:
+              value: '{}'
+          schema:
+            type: object
+            properties: {}
+  deprecated: false
+delete:
+  summary: /paymentMethod
+  description: Call this API to delete ​a token.
+  operationId: paymentmethod_delete
+  parameters:
+    - name: token
+      in: query
+      description: The tokenValue of PaymentMethod.
+      required: true
+      schema:
+        type: string
+    - name: sid
+      in: path
+      description: EVO Cloud assigned store number, unique identifier for store.
+      schema:
+        type: string
+        default: S000001
+      required: true
+  responses:
+    '200':
+      description: '200'
+      content:
+        application/json:
+          examples:
+            Result:
+              value: |-
+                {
+                    "paymentMethod": {
+                        "card": {
+                            "first6No": "601100",
+                            "fundingType": "credit",
+                            "last4No": "1093",
+                            "paymentBrand": "Diners"
+                        },
+                        "token": {
+                            "createTime": "2021-08-12T14:57:49.144Z",
+                            "fingerprint": "d437cceafc3441fb208f91bcda2ac0a4",
+                            "status": "disable",
+                            "updateTime": "20210812025749+0000",
+                            "value": "pmt_98ed586336fbeecde88112ae156e5780",
+                            "vaultID": "20210804"
+                        }
+                    },
+                    "result": {
+                        "code": "S0000",
+                        "message": "success"
+                    }
+                }
+          schema:
+            type: object
+            properties:
+              paymentMethod:
+                type: object
+                properties:
+                  card:
+                    type: object
+                    properties:
+                      first6No:
+                        type: string
+                        example: '601100'
+                      fundingType:
+                        type: string
+                        example: credit
+                      last4No:
+                        type: string
+                        example: '1093'
+                      paymentBrand:
+                        type: string
+                        example: Diners
+                  token:
+                    type: object
+                    properties:
+                      createTime:
+                        type: string
+                        example: '2021-08-12T14:57:49.144Z'
+                      fingerprint:
+                        type: string
+                        example: d437cceafc3441fb208f91bcda2ac0a4
+                      status:
+                        type: string
+                        example: disable
+                      updateTime:
+                        type: string
+                        example: 20210812025749+0000
+                      value:
+                        type: string
+                        example: pmt_98ed586336fbeecde88112ae156e5780
+                      vaultID:
+                        type: string
+                        example: '20210804'
+              result:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: S0000
+                  message:
+                    type: string
+                    example: success
+    '400':
+      description: '400'
+      content:
+        application/json:
+          examples:
+            Result:
+              value: '{}'
+          schema:
+            type: object
+            properties: {}
+  deprecated: false

@@ -1,0 +1,12 @@
+type: reference-docs
+definitionId: evo-cloud-merchant-api
+settings:
+  # pagination: section
+  showConsole: true
+  generateCodeSamples:
+    languages:
+      - lang: curl
+      - lang: Java
+      - lang: JavaScript
+      - lang: Node.js
+      

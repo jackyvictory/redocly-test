@@ -24,7 +24,7 @@ training:
   - group: Developer portal starter
     expanded: true
     pages:
-      - label: Training exercises
+      - label: About
         page: developer-portal/index.md
       - separator: This is a separator
       - label: Setup
@@ -39,7 +39,7 @@ training:
   - group: Developer portal starter
     expanded: true
     pages:
-      - label: Training exercises
+      - label: About
         page: developer-portal/index.md
       - separator: This is a separator
       - label: Setup

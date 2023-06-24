@@ -1,0 +1,558 @@
+post:
+  summary: /capture
+  description: Call this API to capture a payment transaction.
+  operationId: capture_post
+  parameters:
+    - name: sid
+      in: path
+      description: EVO Cloud assigned store number, unique identifier for store.
+      schema:
+        type: string
+        default: S000001
+      required: true
+    - name: merchantTransID
+      in: query
+      description: The merchantTransID of Payment.
+      required: true
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            merchantTransInfo:
+              type: object
+              description: The order information.
+              required:
+                - merchantTransID
+                - merchantTransTime
+              properties:
+                merchantTransID:
+                  type: string
+                  description: >-
+                    The Merchant Order Number. Should be unique in a store. Max
+                    for 32.
+                merchantOrderReference:
+                  type: string
+                  description: >-
+                    The Merchant Order Reference Number. No need to verify
+                    uniqueness. Max for 32.
+                merchantTransTime:
+                  type: string
+                  description: >-
+                    Format: ISO 8601 YYYY-MM-DDThh:mm:ssTZD Sample:
+                    2017-07-17T13:42:40+01:00.
+                  format: date
+            transAmount:
+              type: object
+              description: The transaction amount.
+              required:
+                - currency
+                - value
+              properties:
+                currency:
+                  type: string
+                  description: >-
+                    The currency. The three-character currency code as defined
+                    in ISO-4217. For example : CNY.
+                value:
+                  type: string
+                  description: The amount with major unit. Max for 12.
+                transportValue:
+                  type: string
+                  description: >-
+                    Logistics costs, only RMB. WeChat open orders must be sent
+                    for customs declaration. Only used in /customsClearance.
+                productValue:
+                  type: string
+                  description: >-
+                    Commodity cost, only supports RMB. WeChat open orders must
+                    be sent for customs declaration.Only used in
+                    /customsClearance.
+            initiatingReason:
+              type: string
+              description: To state the initiating reason of the transaction. Max for 64.
+            webhook:
+              type: string
+              description: >-
+                The asynchronous notification address. After the transaction is
+                successfully processed in the backend, a notification will be
+                pushed to this address. Max for 300.
+            metadata:
+              type: string
+              description: The remark information. Max for 512.
+        examples:
+          Request Example:
+            value:
+              merchantTransInfo:
+                merchantTransID: T108121628772377604
+                merchantTransTime: '2021-08-12T20:46:17+08:00'
+              transAmount:
+                currency: THB
+                value: '10.0'
+              transInitiator:
+                platform: WEB
+              metadata: Your metadata
+              webhook: https://64012512-b819-46d5-80ee-bebd40cc3806.mock.pstmn.io
+  responses:
+    '200':
+      description: '200'
+      content:
+        application/json:
+          examples:
+            Result:
+              value: |-
+                {
+                    "capture": {
+                        "evoTransInfo": {
+                            "evoTransID": "0da19e3ceef04f4cbdcd3fc3056a580a",
+                            "evoTransTime": "2021-08-12T19:46:17+07:00"
+                        },
+                        "merchantTransInfo": {
+                            "merchantTransID": "T108121628772377604",
+                            "merchantTransTime": "2021-08-12T20:46:17+08:00"
+                        },
+                        "pspTransInfo": {
+                            "pspTransTime": "2021-08-12T20:46:17+08:00"
+                        },
+                        "status": "Success",
+                        "transAmount": {
+                            "currency": "THB",
+                            "value": "10.0"
+                        }
+                    },
+                    "metadata": "Your metadata",
+                    "payment": {
+                        "evoTransInfo": {
+                            "evoTransID": "a2a6faae079d4222bdb3e7ef09190c16",
+                            "evoTransTime": "2021-08-12T12:45:58Z",
+                            "retrievalReferenceNum": "210812194606"
+                        },
+                        "merchantTransInfo": {
+                            "merchantTransID": "T108121628772357973",
+                            "merchantTransTime": "2021-08-12T20:45:57+08:00"
+                        },
+                        "pspTransInfo": {
+                            "authorizationCode": "079420",
+                            "pspTransTime": "2021-08-12T20:45:57+08:00",
+                            "retrievalReferenceNum": "T10812162877"
+                        },
+                        "status": "Captured",
+                        "transAmount": {
+                            "currency": "THB",
+                            "value": "10.0"
+                        }
+                    },
+                    "paymentMethod": {
+                        "card": {
+                            "first6No": "621094",
+                            "fundingType": "debit",
+                            "last4No": "0027",
+                            "paymentBrand": "UnionPay"
+                        },
+                        "token": {
+                            "fingerprint": "6b213dd555317487e98dd9214c14edd1",
+                            "value": "pmt_890819b446608ccffbe27e3ec563b538"
+                        },
+                        "type": "card"
+                    },
+                    "pspData": {
+                        "name": "UnionPay"
+                    },
+                    "result": {
+                        "code": "S0000",
+                        "message": "success",
+                        "pspMessage": "Approved",
+                        "pspResponseCode": "00"
+                    }
+                }
+          schema:
+            type: object
+            properties:
+              capture:
+                type: object
+                properties:
+                  evoTransInfo:
+                    type: object
+                    properties:
+                      evoTransID:
+                        type: string
+                        example: 0da19e3ceef04f4cbdcd3fc3056a580a
+                      evoTransTime:
+                        type: string
+                        example: '2021-08-12T19:46:17+07:00'
+                  merchantTransInfo:
+                    type: object
+                    properties:
+                      merchantTransID:
+                        type: string
+                        example: T108121628772377604
+                      merchantTransTime:
+                        type: string
+                        example: '2021-08-12T20:46:17+08:00'
+                  pspTransInfo:
+                    type: object
+                    properties:
+                      pspTransTime:
+                        type: string
+                        example: '2021-08-12T20:46:17+08:00'
+                  status:
+                    type: string
+                    example: Success
+                  transAmount:
+                    type: object
+                    properties:
+                      currency:
+                        type: string
+                        example: THB
+                      value:
+                        type: string
+                        example: '10.0'
+              metadata:
+                type: string
+                example: Your metadata
+              payment:
+                type: object
+                properties:
+                  evoTransInfo:
+                    type: object
+                    properties:
+                      evoTransID:
+                        type: string
+                        example: a2a6faae079d4222bdb3e7ef09190c16
+                      evoTransTime:
+                        type: string
+                        example: '2021-08-12T12:45:58Z'
+                      retrievalReferenceNum:
+                        type: string
+                        example: '210812194606'
+                  merchantTransInfo:
+                    type: object
+                    properties:
+                      merchantTransID:
+                        type: string
+                        example: T108121628772357973
+                      merchantTransTime:
+                        type: string
+                        example: '2021-08-12T20:45:57+08:00'
+                  pspTransInfo:
+                    type: object
+                    properties:
+                      authorizationCode:
+                        type: string
+                        example: 79420
+                      pspTransTime:
+                        type: string
+                        example: '2021-08-12T20:45:57+08:00'
+                      retrievalReferenceNum:
+                        type: string
+                        example: T10812162877
+                  status:
+                    type: string
+                    example: Captured
+                  transAmount:
+                    type: object
+                    properties:
+                      currency:
+                        type: string
+                        example: THB
+                      value:
+                        type: string
+                        example: '10.0'
+              paymentMethod:
+                type: object
+                properties:
+                  card:
+                    type: object
+                    properties:
+                      first6No:
+                        type: string
+                        example: '621094'
+                      fundingType:
+                        type: string
+                        example: debit
+                      last4No:
+                        type: string
+                        example: '0027'
+                      paymentBrand:
+                        type: string
+                        example: UnionPay
+                  token:
+                    type: object
+                    properties:
+                      fingerprint:
+                        type: string
+                        example: 6b213dd555317487e98dd9214c14edd1
+                      value:
+                        type: string
+                        example: pmt_890819b446608ccffbe27e3ec563b538
+                  type:
+                    type: string
+                    example: card
+              pspData:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: UnionPay
+              result:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: S0000
+                  message:
+                    type: string
+                    example: success
+                  pspMessage:
+                    type: string
+                    example: Approved
+                  pspResponseCode:
+                    type: string
+                    example: '00'
+    '400':
+      description: '400'
+      content:
+        application/json:
+          examples:
+            Result:
+              value: '{}'
+          schema:
+            type: object
+            properties: {}
+  deprecated: false
+get:
+  summary: /capture
+  description: Call this API to query the capture status of a payment transaction.
+  operationId: capture_get
+  parameters:
+    - name: merchantTransID
+      in: query
+      description: The merchantTransID of Capture.
+      required: true
+      schema:
+        type: string
+    - name: sid
+      in: path
+      description: EVO Cloud assigned store number, unique identifier for store.
+      schema:
+        type: string
+        default: S000001
+      required: true
+  responses:
+    '200':
+      description: '200'
+      content:
+        application/json:
+          examples:
+            Result:
+              value: |-
+                {
+                    "capture": {
+                        "evoTransInfo": {
+                            "evoTransID": "0da19e3ceef04f4cbdcd3fc3056a580a",
+                            "evoTransTime": "2021-08-12T12:46:17Z"
+                        },
+                        "merchantTransInfo": {
+                            "merchantTransID": "T108121628772377604",
+                            "merchantTransTime": "2021-08-12T20:46:17+08:00"
+                        },
+                        "pspTransInfo": {
+                            "pspTransTime": "2021-08-12T20:46:17+08:00"
+                        },
+                        "status": "Success",
+                        "transAmount": {
+                            "currency": "THB",
+                            "value": "10.0"
+                        }
+                    },
+                    "metadata": "Your metadata",
+                    "payment": {
+                        "evoTransInfo": {
+                            "evoTransID": "a2a6faae079d4222bdb3e7ef09190c16",
+                            "evoTransTime": "2021-08-12T12:45:58Z",
+                            "retrievalReferenceNum": "T10812162877"
+                        },
+                        "merchantTransInfo": {
+                            "merchantTransID": "T108121628772377604",
+                            "merchantTransTime": "2021-08-12T20:46:17+08:00"
+                        },
+                        "pspTransInfo": {
+                            "authorizationCode": "079420",
+                            "pspTransTime": "2021-08-12T20:45:57+08:00"
+                        },
+                        "status": "Captured",
+                        "transAmount": {
+                            "currency": "THB",
+                            "value": "10.0"
+                        }
+                    },
+                    "paymentMethod": {
+                        "card": {
+                            "first6No": "621094",
+                            "fundingType": "debit",
+                            "last4No": "0027",
+                            "paymentBrand": "UnionPay"
+                        },
+                        "token": {
+                            "fingerprint": "6b213dd555317487e98dd9214c14edd1",
+                            "value": "pmt_890819b446608ccffbe27e3ec563b538"
+                        },
+                        "type": "card"
+                    },
+                    "pspData": {
+                        "name": "UnionPay"
+                    },
+                    "result": {
+                        "code": "S0000",
+                        "message": "success"
+                    }
+                }
+          schema:
+            type: object
+            properties:
+              capture:
+                type: object
+                properties:
+                  evoTransInfo:
+                    type: object
+                    properties:
+                      evoTransID:
+                        type: string
+                        example: 0da19e3ceef04f4cbdcd3fc3056a580a
+                      evoTransTime:
+                        type: string
+                        example: '2021-08-12T12:46:17Z'
+                  merchantTransInfo:
+                    type: object
+                    properties:
+                      merchantTransID:
+                        type: string
+                        example: T108121628772377604
+                      merchantTransTime:
+                        type: string
+                        example: '2021-08-12T20:46:17+08:00'
+                  pspTransInfo:
+                    type: object
+                    properties:
+                      pspTransTime:
+                        type: string
+                        example: '2021-08-12T20:46:17+08:00'
+                  status:
+                    type: string
+                    example: Success
+                  transAmount:
+                    type: object
+                    properties:
+                      currency:
+                        type: string
+                        example: THB
+                      value:
+                        type: string
+                        example: '10.0'
+              metadata:
+                type: string
+                example: Your metadata
+              payment:
+                type: object
+                properties:
+                  evoTransInfo:
+                    type: object
+                    properties:
+                      evoTransID:
+                        type: string
+                        example: a2a6faae079d4222bdb3e7ef09190c16
+                      evoTransTime:
+                        type: string
+                        example: '2021-08-12T12:45:58Z'
+                      retrievalReferenceNum:
+                        type: string
+                        example: T10812162877
+                  merchantTransInfo:
+                    type: object
+                    properties:
+                      merchantTransID:
+                        type: string
+                        example: T108121628772377604
+                      merchantTransTime:
+                        type: string
+                        example: '2021-08-12T20:46:17+08:00'
+                  pspTransInfo:
+                    type: object
+                    properties:
+                      authorizationCode:
+                        type: string
+                        example: 79420
+                      pspTransTime:
+                        type: string
+                        example: '2021-08-12T20:45:57+08:00'
+                  status:
+                    type: string
+                    example: Captured
+                  transAmount:
+                    type: object
+                    properties:
+                      currency:
+                        type: string
+                        example: THB
+                      value:
+                        type: string
+                        example: '10.0'
+              paymentMethod:
+                type: object
+                properties:
+                  card:
+                    type: object
+                    properties:
+                      first6No:
+                        type: string
+                        example: '621094'
+                      fundingType:
+                        type: string
+                        example: debit
+                      last4No:
+                        type: string
+                        example: '0027'
+                      paymentBrand:
+                        type: string
+                        example: UnionPay
+                  token:
+                    type: object
+                    properties:
+                      fingerprint:
+                        type: string
+                        example: 6b213dd555317487e98dd9214c14edd1
+                      value:
+                        type: string
+                        example: pmt_890819b446608ccffbe27e3ec563b538
+                  type:
+                    type: string
+                    example: card
+              pspData:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: UnionPay
+              result:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: S0000
+                  message:
+                    type: string
+                    example: success
+    '400':
+      description: '400'
+      content:
+        application/json:
+          examples:
+            Result:
+              value: '{}'
+          schema:
+            type: object
+            properties: {}
+  deprecated: false
