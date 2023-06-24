@@ -5,7 +5,7 @@ extends:
 
 apis:
   EVO Test@v1:
-    root: ./api.json
+    root: ./openapi/evo-cloud-merchant-api/openapi.yaml
     labels:
       - external
     rules:
@@ -22,3 +22,4 @@ theme:
         - lang: curl
         - lang: Python
         - lang: Go
+        - lang: Java
